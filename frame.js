@@ -8,11 +8,10 @@ var Frame = msgproto.Frame
 module.exports = IntegrityFrame
 
 function IntegrityFrame(checksumFn, payload, payloadType) {
-
   if (!(this instanceof IntegrityFrame))
     return new IntegrityFrame(checksumFn, payload, payloadType)
 
-  Frame.apply(this, [payload, payloadType])
+  Frame.call(this, payload, payloadType)
   this.checksumFn = checksumFn && IntegrityFrame.coerceChecksumFn(checksumFn)
 }
 
@@ -74,7 +73,7 @@ IntegrityFrame.prototype.setDecodedData = function(data) {
 
 IntegrityFrame.prototype.toString = function() {
   var ok = (this.validateChecksum() == undefined) ? 'ok' : 'fail';
-  var hash = this.checksum.toString('hex').substr(0, 6)
+  var hash = (this.checksum || new Buffer(0)).toString('hex').substr(0, 6)
   var fn = this.checksumFn
   return "<IntegrityFrame 0x"+fn+" "+hash+" "+ok+">"
 }

@@ -1,6 +1,6 @@
 {
   "name": "ipfs-msgproto-integrity",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "msgproto integrity",
   "main": "index.js",
   "scripts": {

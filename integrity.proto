@@ -1,0 +1,11 @@
+// A packet of data that is integrity-checked.
+// Meaning, it includes a checksum (multihash).
+message IntegrityFrame {
+  optional Multihash checksum = 1;
+  optional bytes payload = 2; // a PayloadFrame
+}
+
+// Multihash embedded here from ipfs.crypto.
+message Multihash {
+  required bytes hash = 1;
+}

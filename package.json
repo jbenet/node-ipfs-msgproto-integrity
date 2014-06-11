@@ -1,6 +1,6 @@
 {
   "name": "ipfs-msgproto-integrity",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "msgproto integrity",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "msgproto": "^0.1.0",
     "multihashes": "^0.1.2",
     "multihashing": "^0.1.2",
-    "shuffle-buffer": "^1.0.0"
+    "shuffle-buffer": "^1.0.0",
+    "xtend": "^3.0.0"
   },
   "devDependencies": {},
   "repository": {

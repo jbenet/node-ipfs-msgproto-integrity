@@ -5,14 +5,11 @@ var IntegrityFrame = require('./frame')
 
 module.exports = IntegrityProtocol
 
-IntegrityProtocol.Frame = IntegrityFrame
-IntegrityProtocol.Corrupt = require('./corrupt')
-
 // integrity stream "wraps" (pipes) a duplex packet stream
 // with integrity checksums + verification
 function IntegrityProtocol(stream, opts) {
   // default opts
-  opts = extend({unwrap: true, checksumFn: 'sha1'}, (opts || {}))
+  opts = extend(IntegrityProtocol.defaults, (opts || {}))
 
   if (!opts.payloadType)
     throw new Error('requires opts.payloadType')
@@ -23,7 +20,16 @@ function IntegrityProtocol(stream, opts) {
   return transDuplex.obj(wrap, stream, unwrap)
 
   function wrap(msg, enc, next) {
-    this.push(IntegrityFrame(opts.checksumFn, msg, opts.payloadType))
+    if (opts.wrap) {
+      msg = IntegrityFrame(opts.checksumFn, msg, opts.payloadType)
+    }
+    else if (!(msg instanceof IntegrityFrame)) {
+      var err = new Error('wrote non-integrity message with wrap = false')
+      this.emit('error', err)
+      return next()
+    }
+
+    this.push(msg)
     next()
   }
 
@@ -32,23 +38,23 @@ function IntegrityProtocol(stream, opts) {
   function unwrap(msg, enc, next) {
     msg.payloadType = msg.payloadType || opts.payloadType
 
-    var err = undefined
-    try {
-      err = msg.validate()
-    } catch (e) {
-      err = e
-    }
-
+    err = msg.validate()
     if (err) {
       this.emit('invalid', { message: msg, error: err })
-    } else {
-      // ok, it's good. unwrap.
-
-      if (opts.unwrap)
-        this.push(msg.getDecodedPayload())
-      else
-        this.push(msg)
+      return next()
     }
+
+    if (opts.unwrap) {
+      msg = msg.getDecodedPayload()
+    }
+
+    this.push(msg)
     next()
   }
+}
+
+IntegrityProtocol.defaults = {
+  checksumFn: 'sha1',
+  unwrap: true,
+  wrap: true,
 }

@@ -35,8 +35,13 @@ IntegrityFrame.prototype.validateChecksum = function() {
     return new Error("no checksum");
 
   // fill in checksumFn if we have a checksum.
-  if (!this.checksumFn)
-    this.checksumFn = multihash.decode(this.checksum).code
+  if (!this.checksumFn) {
+    try {
+      this.checksumFn = multihash.decode(this.checksum).code
+    } catch (e) {
+      return e
+    }
+  }
 
   var sum = this.calculateChecksum()
   if (!bufeq(this.checksum, sum))
@@ -46,7 +51,7 @@ IntegrityFrame.prototype.validateChecksum = function() {
 }
 
 IntegrityFrame.prototype.validChecksum = function() {
-  return !!this.validateChecksum()
+  return !this.validateChecksum()
 }
 
 IntegrityFrame.prototype.validate = function() {

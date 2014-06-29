@@ -1,6 +1,6 @@
 {
   "name": "ipfs-msgproto-integrity",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "msgproto integrity",
   "main": "index.js",
   "scripts": {
@@ -11,15 +11,21 @@
   "dependencies": {
     "buffer-equal": "0.0.1",
     "duplex-transform": "^0.1.3",
-    "msgproto": "^0.1.4",
+    "duplexer2.jbenet": "0.0.3",
+    "ipfs-protobuf-codec": "0.0.5",
+    "msgproto": "^0.2.2",
     "multihashes": "^0.1.2",
     "multihashing": "^0.1.2",
+    "pipe-segment": "^0.1.2",
+    "pipe-segment-filter": "^0.1.1",
     "shuffle-buffer": "^1.0.0",
+    "through2": "^0.5.1",
     "xtend": "^3.0.0"
   },
   "devDependencies": {
     "lodash.map": "^2.4.1",
     "multi-dgram-stream": "^0.1.0",
+    "stream-corrupt": "^0.1.0",
     "tape": "^2.13.2"
   },
   "repository": {
